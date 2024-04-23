@@ -65,7 +65,7 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-        if kk_rct.colliderect(bd_rct):  #こうかとん爆弾がぶつかったら
+        if kk_rct.colliderect(bd_rct):  # こうかとん爆弾がぶつかったら
             print("Gsme Over")
             finish(screen)
             return
