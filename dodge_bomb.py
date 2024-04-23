@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
 
 
@@ -22,7 +23,7 @@ def check_bound(obj_rct:pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
-def change_kk():
+def change_kk():  # 追加課題１
     """
     飛ぶ方向に従って画像を回転または反転するために用いる辞書を作製する関数
     戻り値：辞書の中身
@@ -30,15 +31,15 @@ def change_kk():
     k1 = pg.image.load("fig/3.png")
     k2 = pg.transform.flip(pg.image.load("fig/3.png"),True, False)
     k3 = pg.transform.flip(pg.image.load("fig/3.png"),False, True)
-    return  {(-5, 0):pg.transform.rotozoom(k1, 0, 1.0), #左
-             (-5, +5):pg.transform.rotozoom(k1, 45, 1.0), #左下
-             (0,+5):pg.transform.rotozoom(k3, 90, 1.0), #下
-             (+5, +5):pg.transform.rotozoom(k2, -45, 1.0), #右下
-             (+5, 0):pg.transform.rotozoom(k2, 0, 1.0), #右
-             (+5, -5):pg.transform.rotozoom(k2, 45, 1.0), #右上
-             (0, -5):pg.transform.rotozoom(k3, 270, 1.0), #上
-             (-5, -5):pg.transform.rotozoom(k1, 315, 1.0), #左上
-             (0, 0):pg.transform.rotozoom(k1, 0, 1.0) } #常時
+    return  {(-5, 0):pg.transform.rotozoom(k1, 0, 1.0),  # 左
+             (-5, +5):pg.transform.rotozoom(k1, 45, 1.0),  # 左下
+             (0,+5):pg.transform.rotozoom(k3, 90, 1.0),  # 下
+             (+5, +5):pg.transform.rotozoom(k2, -45, 1.0),  # 右下
+             (+5, 0):pg.transform.rotozoom(k2, 0, 1.0),  # 右
+             (+5, -5):pg.transform.rotozoom(k2, 45, 1.0),  # 右上
+             (0, -5):pg.transform.rotozoom(k3, 270, 1.0),  # 上
+             (-5, -5):pg.transform.rotozoom(k1, 315, 1.0),  # 左上
+             (0, 0):pg.transform.rotozoom(k1, 0, 1.0) }  # 常時
     
 
 
@@ -64,8 +65,9 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-        if kk_rct.colliderect(bd_rct): #こうかとん爆弾がぶつかったら
+        if kk_rct.colliderect(bd_rct):  #こうかとん爆弾がぶつかったら
             print("Gsme Over")
+            finish(screen)
             return
         screen.blit(bg_img, [0, 0]) 
 
@@ -83,14 +85,28 @@ def main():
         bd_rct.move_ip(vx, vy)
         screen.blit(bd_img, bd_rct)
         yoko, tate = check_bound(bd_rct)
-        if not yoko: #横方向にはみ出てたら
+        if not yoko:  # 横方向にはみ出てたら
             vx *= -1
-        if not tate: #縦方向にはみ出てたら
+        if not tate:  # 縦方向にはみ出てたら
             vy *= -1
         pg.display.update()
         tmr += 1
         clock.tick(50)
 
+
+def finish(screen:pg.Surface):  # 追加課題２
+    back = pg.Surface((WIDTH,HEIGHT))
+    pg.draw.rect(back,(0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
+    back.set_alpha(200)
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Game Over", True, (255, 255, 255))
+    kk_cr = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
+    screen.blit(back, [0,0])
+    screen.blit(txt, [650, 450])
+    screen.blit(kk_cr, [500, 400])
+    screen.blit(kk_cr, [1000, 400])
+    pg.display.update()
+    time.sleep(5)
 
 
 if __name__ == "__main__":
